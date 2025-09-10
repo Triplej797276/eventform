@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Registration Form</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(to right, #0f172a, #1e40af);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .form-container {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Floating labels */
+    .input-container {
+      position: relative;
+      margin-top: 1.5rem;
+    }
+
+    .input-container input,
+    .input-container textarea,
+    .input-container select {
+      width: 100%;
+      padding: 1rem 0.75rem 0.25rem 0.75rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.75rem;
+      outline: none;
+      background: transparent;
+      transition: border 0.2s;
+    }
+
+    .input-container label {
+      position: absolute;
+      top: 1rem;
+      left: 0.75rem;
+      font-size: 0.875rem;
+      color: #64748b;
+      pointer-events: none;
+      transition: all 0.2s;
+    }
+
+    .input-container input:focus + label,
+    .input-container input:not(:placeholder-shown) + label,
+    .input-container textarea:focus + label,
+    .input-container textarea:not(:placeholder-shown) + label,
+    .input-container select:focus + label,
+    .input-container select:not([value=""]) + label {
+      top: -0.5rem;
+      left: 0.5rem;
+      font-size: 0.75rem;
+      color: #2563eb;
+      background: white;
+      padding: 0 0.25rem;
+    }
+
+    .input-container input:focus,
+    .input-container textarea:focus,
+    .input-container select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    }
+
+    /* Button hover effect */
+    .btn-submit {
+      background: linear-gradient(to right, #2563eb, #4f46e5);
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(to right, #1e3a8a, #4338ca);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="form-container bg-white shadow-2xl rounded-3xl w-full max-w-lg p-8 sm:p-10">
+    <h2 class="text-3xl font-bold text-gray-800 text-center mb-6">User Registration</h2>
+
+    <form id="registerForm" class="space-y-4">
+      <!-- Name -->
+      <div class="input-container">
+        <input type="text" id="name" placeholder=" " required>
+        <label for="name">Full Name</label>
+      </div>
+
+      <!-- Email -->
+      <div class="input-container">
+        <input type="email" id="email" placeholder=" " required>
+        <label for="email">Email</label>
+      </div>
+
+      <!-- City -->
+      <div class="input-container">
+        <input type="text" id="city" placeholder=" " required>
+        <label for="city">City</label>
+      </div>
+
+      <!-- District -->
+      <div class="input-container">
+        <input type="text" id="district" placeholder=" " required>
+        <label for="district">District</label>
+      </div>
+
+      <!-- Phone -->
+      <div class="input-container">
+        <input type="tel" id="phonenumber" placeholder=" " required>
+        <label for="phonenumber">Phone Number</label>
+      </div>
+
+      <!-- Address -->
+      <div class="input-container">
+        <textarea id="address" rows="3" placeholder=" " required></textarea>
+        <label for="address">Address</label>
+      </div>
+
+      <!-- Profession -->
+      <div class="input-container">
+        <select id="profession" required>
+          <option value="" disabled selected hidden></option>
+          <option value="Engineer">Engineer</option>
+          <option value="Teacher">Teacher</option>
+          <option value="Doctor">Doctor</option>
+          <option value="Student">Student</option>
+          <option value="Other">Other</option>
+        </select>
+        <label for="profession">Profession</label>
+      </div>
+
+      <!-- Feedback -->
+      <div class="input-container">
+        <textarea id="feedback" rows="3" placeholder=" " required></textarea>
+        <label for="feedback">Feedback</label>
+      </div>
+
+      <button type="submit" class="w-full py-3 text-white font-semibold rounded-xl btn-submit">Register</button>
+    </form>
+
+    <p id="message" class="mt-6 text-center text-sm font-medium text-gray-700"></p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyApw_WneyDTByuPSj0OuFAtIuY6vqci9LM",
+      authDomain: "mhkcerp-1a913.firebaseapp.com",
+      projectId: "mhkcerp-1a913",
+      storageBucket: "mhkcerp-1a913.appspot.com",
+      messagingSenderId: "444610489913",
+      appId: "1:444610489913:web:6f3d406580a776a93be7e8",
+      measurementId: "G-N5W4SJVZKG"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const form = document.getElementById("registerForm");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const city = document.getElementById("city").value.trim();
+      const district = document.getElementById("district").value.trim();
+      const profession = document.getElementById("profession").value;
+      const phonenumber = document.getElementById("phonenumber").value.trim();
+      const address = document.getElementById("address").value.trim();
+      const feedback = document.getElementById("feedback").value.trim();
+
+      if (!name || !email || !city || !district || !profession || !phonenumber || !address || !feedback) {
+        message.innerText = "❌ All fields are required!";
+        message.classList.remove("text-green-600");
+        message.classList.add("text-red-600");
+        return;
+      }
+
+      try {
+        const eventDocRef = await addDoc(collection(db, "events"), { createdAt: serverTimestamp() });
+        await addDoc(collection(eventDocRef, "registerUser"), {
+          userData: { name, email, city, district, profession, phonenumber, address, feedback },
+          createdAt: serverTimestamp()
+        });
+        message.innerText = "✅ Registration successful!";
+        message.classList.remove("text-red-600");
+        message.classList.add("text-green-600");
+        form.reset();
+      } catch (error) {
+        console.error("Error saving:", error);
+        message.innerText = "❌ Error saving data";
+        message.classList.remove("text-green-600");
+        message.classList.add("text-red-600");
+      }
+    });
+  </script>
+</body>
+</html>
