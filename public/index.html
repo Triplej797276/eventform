@@ -3,16 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Registration Form</title>
+  <title>Registration Form</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <style>
     body {
-      background: linear-gradient(to right, #0f172a, #1e40af);
       font-family: 'Inter', sans-serif;
+      background: linear-gradient(45deg, #1e293b, #075985, #1e40af, #4b5563);
+      background-size: 400% 400%;
+      animation: gradientAnimation 15s ease infinite;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated gradient background */
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Overlay for readability */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+      z-index: 1;
+    }
+
+    /* Particles container */
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 0;
     }
 
     .form-container {
       animation: fadeIn 0.5s ease-in-out;
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
 
     @keyframes fadeIn {
@@ -31,11 +75,11 @@
     .input-container select {
       width: 100%;
       padding: 1rem 0.75rem 0.25rem 0.75rem;
-      border: 1px solid #cbd5e1;
+      border: 1px solid #d1d5db;
       border-radius: 0.75rem;
       outline: none;
-      background: transparent;
-      transition: border 0.2s;
+      background: white;
+      transition: border 0.2s, box-shadow 0.2s;
     }
 
     .input-container label {
@@ -43,9 +87,11 @@
       top: 1rem;
       left: 0.75rem;
       font-size: 0.875rem;
-      color: #64748b;
+      color: #6b7280;
       pointer-events: none;
       transition: all 0.2s;
+      background: white;
+      padding: 0 0.25rem;
     }
 
     .input-container input:focus + label,
@@ -58,18 +104,16 @@
       left: 0.5rem;
       font-size: 0.75rem;
       color: #2563eb;
-      background: white;
-      padding: 0 0.25rem;
     }
 
     .input-container input:focus,
     .input-container textarea:focus,
     .input-container select:focus {
       border-color: #2563eb;
-      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
     }
 
-    /* Button hover effect */
+    /* Button */
     .btn-submit {
       background: linear-gradient(to right, #2563eb, #4f46e5);
       transition: transform 0.2s, background 0.3s;
@@ -77,13 +121,14 @@
 
     .btn-submit:hover {
       transform: translateY(-2px);
-      background: linear-gradient(to right, #1e3a8a, #4338ca);
+      background: linear-gradient(to right, #1d4ed8, #4338ca);
     }
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
-  <div class="form-container bg-white shadow-2xl rounded-3xl w-full max-w-lg p-8 sm:p-10">
-    <h2 class="text-3xl font-bold text-gray-800 text-center mb-6">User Registration</h2>
+  <div id="particles-js"></div>
+  <div class="form-container bg-white shadow-xl rounded-3xl w-full max-w-lg p-8 sm:p-10 border border-gray-200">
+    <h2 class="text-3xl font-bold text-gray-800 text-center mb-6">MHKC Event Form</h2>
 
     <form id="registerForm" class="space-y-4">
       <!-- Name -->
@@ -135,10 +180,10 @@
         <label for="profession">Profession</label>
       </div>
 
-      <!-- Feedback -->
+      <!-- Join Program -->
       <div class="input-container">
         <textarea id="feedback" rows="3" placeholder=" " required></textarea>
-        <label for="feedback">Feedback</label>
+        <label for="feedback">Would you like to join this type of program?</label>
       </div>
 
       <button type="submit" class="w-full py-3 text-white font-semibold rounded-xl btn-submit">Register</button>
@@ -202,6 +247,25 @@
         message.classList.remove("text-green-600");
         message.classList.add("text-red-600");
       }
+    });
+
+    // Initialize particles.js
+    particlesJS("particles-js", {
+      particles: {
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: "#d1d5db" },
+        shape: { type: "circle", stroke: { width: 0, color: "#000000" } },
+        opacity: { value: 0.6, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false } },
+        size: { value: 3, random: true, anim: { enable: false, speed: 40, size_min: 0.1, sync: false } },
+        line_linked: { enable: true, distance: 150, color: "#d1d5db", opacity: 0.4, width: 1 },
+        move: { enable: true, speed: 2, direction: "none", random: false, straight: false, out_mode: "out", bounce: false }
+      },
+      interactivity: {
+        detect_on: "canvas",
+        events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
+        modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 4 } }
+      },
+      retina_detect: true
     });
   </script>
 </body>
